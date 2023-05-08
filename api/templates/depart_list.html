@@ -1,0 +1,61 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Department List
+{% endblock %}
+
+{% block content %}
+
+<div class="container">
+
+    <div style="margin-bottom: 10px;">
+        <a class="btn btn-success" href="{% url 'api:depart_add' %}">
+            <span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span>
+            New Department
+        </a>
+    </div>
+    <div class="panel panel-default">
+        <!-- Default panel contents -->
+        <div class="panel-heading">
+            <span class="glyphicon glyphicon-th-list" aria-hidden="true"></span>
+            Department List
+        </div>
+
+        <!-- Table -->
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>Operation</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for obj in data_list %}
+                <tr>
+                    <th>{{ obj.id }}</th>
+                    <td>{{ obj.title }}</td>
+                    <td>
+                        <!-- <a class="btn btn-primary btn-xs" href="/api/depart/edit/?nid={{ obj.id }}"> -->
+                        <a class="btn btn-primary btn-xs" href="{% url 'api:depart_edit' nid=obj.id %}">
+                            Edit
+                        </a>
+                        <a class="btn btn-danger btn-xs" href="{% url 'api:depart_delete' %}?nid={{ obj.id }}">
+                            Delete
+                        </a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    {#          Pagination:          #}
+    <div>
+        <ul class="pagination">
+                {{ page_str }}
+        </ul>
+    </div>
+</div>
+
+{% endblock %}

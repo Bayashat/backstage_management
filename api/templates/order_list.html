@@ -1,0 +1,306 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Order List
+{% endblock %}
+
+
+{% block content %}
+
+<div class="container">
+    <div style="margin-bottom: 10px;">
+        <input id="btnAdd" type="button" value="New Order" class="btn btn-success">
+    </div>
+
+    <div class="panel panel-default">
+        <!-- Default panel contents -->
+        <div class="panel-heading">
+            <span class="glyphicon glyphicon-th-list" aria-hidden="true"></span>
+            <List>Order List</List>
+        </div>
+
+        <!-- Table -->
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Order ID</th>
+                    <th>Title</th>
+                    <th>Price</th>
+                    <th>Payment Status</th>
+                    <th>Delivery Status</th>
+                    <th>User</th>
+                    <th>Operation</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for obj in data_list %}
+                <tr>
+                    <th>{{ obj.id }}</th>
+                    <td>{{ obj.oid }}</td>
+                    <td>{{ obj.title }}</td>
+                    <td>{{ obj.price }}</td>
+                    <td>{{ obj.get_payment_status_display }}</td>
+                    <td>{{ obj.get_delivery_status_display }}</td>
+                    <td>{{ obj.user }}</td>
+                    <td>
+                        <input uid="{{ obj.id }}" type="button" class="btn btn-primary btn-xs btn-edit" value="Edit">
+                        <!-- uid is a custom attribute used to delete -->
+                        <input uid="{{ obj.id }}" type="button" class="btn btn-danger btn-xs btn-delete" value="Delete">
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <!-- Pagination -->
+        <div>
+            <ul class="pagination">
+                {{ page_str }}
+            </ul>
+        </div>
+    </div>
+
+
+
+</div>
+
+<!-- Add/Edit Order (dialog) -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                        aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="myModalLabel">New Order</h4>
+            </div>
+            <div class="modal-body">
+
+                <form id="formAdd" novalidate>
+                    <div class="clearfix">
+
+                        {% for field in form %}
+                        <div class="col-xs-6">
+                            <div class="form-group" style="position: relative; margin-bottom: 20px;">
+                                <label>{{ field.label }}</label>
+                                {{ field }}
+                                <span class="error-msg" style="color: red; position: absolute;"></span>
+                            </div>
+                        </div>
+                        {% endfor %}
+
+                    </div>
+                </form>
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                <button id="btnSave" type="button" class="btn btn-primary">Save</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Delete(dialog) -->
+<div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+
+        <div class="alert alert-danger alert-dismissible fade in" role="alert">
+            <h4>Are you sure to delete?</h4>
+            <p style="margin: 10px 0;">After deletion, all associated related data will be deleted</p>
+            <p style="text-align: right;">
+                <button id="btnConfirmDelete" type="button" class="btn btn-danger">Confirm</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+            </p>
+        </div>
+
+    </div>
+</div>
+
+
+{% endblock %}
+
+{% block js %}
+<script type="text/javascript">
+    var DELETE_ID;
+    var EDIT_ID;
+
+    $(function () {
+        bindBtnAddEvent();
+        bindBtnSaveEvent();
+        bindBtnDeleteEvent();
+        bindBtnConfirmDeleteEvent();
+        bindBtnEditEvent();
+    })
+
+    function bindBtnAddEvent() {
+        $("#btnAdd").click(function () {
+            //  Set the ID being edited to null
+            EDIT_ID = undefined;
+
+
+            //  Clear the data in the dialog box first
+            $("#formAdd")[0].reset();
+
+            //  2) Modify the title of the dialog
+            $("#myModalLabel").text("New Order")
+
+            //  1) Click the Add button to display the dialog
+            $("#myModal").modal("show");
+        })
+    }
+
+    function bindBtnSaveEvent() {
+        $("#btnSave").click(function () {
+
+            $(".error-msg").empty();  // Clear previous Error
+
+            if (EDIT_ID) {
+                //  Edit
+                doEdit();
+            } else {
+                //  Add
+                doAdd();
+            }
+        })
+    }
+
+    function doEdit() {
+        $.ajax({
+            url: "/api/order/edit/" + "?uid=" + EDIT_ID,
+            type: 'post',
+            data: $("#formAdd").serialize(),
+            dataType: "JSON",
+            success: function (res) {
+                if (res.status) {
+                    //  clear form
+                    $("#formAdd")[0].reset();
+
+                    //  close dialog
+                    $("#myModal").modal("hide");
+
+                    //  Refresh page
+                    location.reload()
+                } else {
+                    if(res.tips) {
+                        alert(res.tips);
+                    } else {
+                        // Display error message
+                        $.each(res.error, function (name, errorList) {
+                            console.log(name, errorList);
+                            $("#id_" + name).next().text(errorList[0])
+                        })
+                    }
+                }
+            }
+        })
+    }
+
+
+    function doAdd() {
+        // Sending an Ajax request
+        $.ajax({
+            url: "/api/order/add/",
+            type: 'post',
+            data: $("#formAdd").serialize(),
+            dataType: "JSON",
+            success: function (res) {
+                if (res.status) {
+                    //  clear form  $("#formAdd") is jQuery Object -> $("#formAdd")[0] is DOM object
+                    $("#formAdd")[0].reset();
+
+                    //  Close dialog
+                    $("#myModal").modal("hide");
+
+                    //  Refresh page
+                    location.reload()
+                } else {
+                    // Display error messages
+                    $.each(res.error, function (name, errorList) {
+                        console.log(name, errorList);
+                        $("#id_" + name).next().text(errorList[0])
+                    })
+                }
+            }
+        })
+    }
+
+
+    function bindBtnDeleteEvent() {
+        $(".btn-delete").click(function () {
+            // Display delete dialog
+            $("#deleteModal").modal('show');
+
+            //  Get the id of the current row and assign it to a global variable
+            DELETE_ID = $(this).attr("uid");
+        })
+    }
+
+    function bindBtnConfirmDeleteEvent() {
+        $("#btnConfirmDelete").click(function () {
+            // Click the Confirm Delete button, to send the ID to be deleted set in the global variable to the server
+            $.ajax({
+                url: "/api/order/delete/",    //  =>  /order/delete/?uid=123
+                type: "GET",
+                data: {
+                    uid: DELETE_ID
+                },
+                dataType: "JSON",
+                success: function (res) {
+                    if (res.status) {
+                        //  close dialog
+                        // $("#deleteModal").modal("hide");
+
+                        //  Refresh page:
+                        location.reload()
+
+                    } else {
+                        //  Failed to delete
+                        alert(res.error)
+                    }
+
+                }
+            })
+        });
+    }
+
+    function bindBtnEditEvent() {
+        $(".btn-edit").click(function () {
+            //  Before each click, clear the data in the dialog
+            $("#formAdd")[0].reset();
+
+            EDIT_ID = $(this).attr('uid')  // Get the value of the uid attribute of the edit row
+
+            //  Send an Ajax request to the server to get the relevant data of the current row
+            $.ajax({
+                url: "/api/order/detail/",    //  =>  /order/detail/?uid=123
+                type: "GET",
+                data: {
+                    uid: EDIT_ID
+                },
+                dataType: "JSON",
+                success: function (res) {
+                    if (res.status) {
+                        // console.log(res);
+
+                        //  1) Assign data to the label in the dialog
+                        $.each(res.data, function (name, value) {
+                            $("#id_" + name).val(value);  // find label and set data
+                        })
+
+                        //  2) Only when the row data to be edited is obtained, the dialog box will display
+                        //  3) Modify the title of the dialog
+                        $("#myModalLabel").text("Edit")
+
+                        //  4) Click the edit button to display the dialog
+                        $("#myModal").modal("show");
+                    } else {
+                        alert(res.error)
+                    }
+
+                }
+            })
+        })
+    }
+</script>
+{% endblock %}

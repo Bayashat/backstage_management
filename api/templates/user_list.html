@@ -1,0 +1,82 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    User List
+{% endblock %}
+
+
+{% block content %}
+
+<div class="container">
+    <div style="margin-bottom: 10px;">
+        <a class="btn btn-success" href="{% url 'api:user_add' %}">
+            <span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span>
+            New User
+        </a>
+        <div style="float: right; width: 300px">
+            <form method="get">
+                <div class="input-group">
+                    <input type="text" name="q" class="form-control" placeholder="Search for..."
+                        value="{{ search_data }}">
+                    <span class="input-group-btn">
+                        <button class="btn btn-default" type="submit">
+                            <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
+                        </button>
+                    </span>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div class="panel panel-default">
+        <!-- Default panel contents -->
+        <div class="panel-heading">
+            <span class="glyphicon glyphicon-th-list" aria-hidden="true"></span>
+            User List
+        </div>
+
+        <!-- Table -->
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>Gender</th>
+                    <th>Contact Number</th>
+                    <th>Address</th>
+                    <th>Create Time</th>
+                    <th>Operation</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for obj in data_list %}
+                <tr>
+                    <th>{{ obj.id }}</th>
+                    <td>{{ obj.last_name }} {{ obj.first_name }}</td>
+                    <td>{{ obj.get_gender_display }}</td>
+                    <td>{{ obj.contact_number }}</td>
+                    <td>{{ obj.address }}</td>
+                    <td>{{ obj.create_time|date:"Y-m-d" }}</td> <!--  |date: "Y-m-d H:i:s"-->
+                    <td>
+                        <a class="btn btn-primary btn-xs" href="{% url 'api:user_edit' nid=obj.id %}">
+                            Edit
+                        </a>
+                        <a class="btn btn-danger btn-xs" href="{% url 'api:user_delete' nid=obj.id %}">
+                            delete
+                        </a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{#          Pagination      #}
+        <div>
+            <ul class="pagination">
+                {{ page_str }}
+            </ul>
+        </div>
+</div>
+
+
+
+{% endblock %}
