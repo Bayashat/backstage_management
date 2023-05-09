@@ -1,25 +1,26 @@
 """
-自定义的分页组件, 如果想要使用这个分页组件, 你需要做以下几件事
+This is my custom paging component, if you want to use this paging component, you need to do the following
 
-在视图函数中: 
-    def VipNum(request):
+in the view function:
 
-        #   1. 根据自己的情况去筛选自己的数据
+    def ViewFunc(request):
+
+        #   1. Filter your own data according to your own situation
         queryset = models.VipNum.objects.all()
 
-        #   2. 实例化分页对象
+        #   2. Instantiate the pagination object
         page_obj = Pagination(request, queryset)
 
         # page_queryset = page_obj.page_queryset
         # page_str = page_obj.html()
 
         context = {
-            "data_list": page_obj.page_queryset,  # 分完页的数据
-            "page_str": page_obj.html()  # 生成页码
+            "data_list": page_obj.page_queryset,  # Paged data
+            "page_str": page_obj.html()  # Generate page html
         }
-        return render(request, 'vipnum_list.html', context)
+        return render(request, 'template.html', context)
 
-在HTML页面中:
+in the HTML page:
 
     {% for obj in data_list %}
         {{ obj.xx }}
