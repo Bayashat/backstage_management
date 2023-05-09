@@ -47,7 +47,7 @@ class User(models.Model):
         (2, 'Female'),
     )
     gender = models.SmallIntegerField(verbose_name="Gender", choices=gender_choices)
-    contact_number = models.IntegerField(verbose_name="Contact Number", max_length=11)
+    contact_number = models.IntegerField(verbose_name="Contact Number")
     address = models.CharField(verbose_name="Address", max_length=128, null=True, blank=True)
 
     def __str__(self) -> str:
