@@ -167,7 +167,7 @@
 
     function doEdit() {
         $.ajax({
-            url: "/api/order/edit/" + "?uid=" + EDIT_ID,
+            url: "/order/edit/" + "?uid=" + EDIT_ID,
             type: 'post',
             data: $("#formAdd").serialize(),
             dataType: "JSON",
@@ -200,7 +200,7 @@
     function doAdd() {
         // Sending an Ajax request
         $.ajax({
-            url: "/api/order/add/",
+            url: "/order/add/",
             type: 'post',
             data: $("#formAdd").serialize(),
             dataType: "JSON",
@@ -240,7 +240,7 @@
         $("#btnConfirmDelete").click(function () {
             // Click the Confirm Delete button, to send the ID to be deleted set in the global variable to the server
             $.ajax({
-                url: "/api/order/delete/",    //  =>  /order/delete/?uid=123
+                url: "/order/delete/",    //  =>  /order/delete/?uid=123
                 type: "GET",
                 data: {
                     uid: DELETE_ID
@@ -273,7 +273,7 @@
 
             //  Send an Ajax request to the server to get the relevant data of the current row
             $.ajax({
-                url: "/api/order/detail/",    //  =>  /order/detail/?uid=123
+                url: "/order/detail/",    //  =>  /order/detail/?uid=123
                 type: "GET",
                 data: {
                     uid: EDIT_ID
