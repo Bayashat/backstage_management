@@ -29,7 +29,7 @@ def admin_list(request):
         "search_data": search_data,
     }
 
-    return render(request, '../templates/admin_list.html', context)
+    return render(request, 'admin_list.html', context)
 
 
 #                   2) Add a admin
@@ -38,7 +38,7 @@ def admin_add(request):
 
     if request.method == "GET":
         form = AdminModelForm()  # Instantiate the Form object
-        return render(request, '../templates/change.html', {"title": title, "form": form})
+        return render(request, 'change.html', {"title": title, "form": form})
 
     # Get POST data
     form = AdminModelForm(data=request.POST)  # Validation process
@@ -47,7 +47,7 @@ def admin_add(request):
         form.save()  # If the data is valid, save it to the database
         return redirect('api:admin_list')
     # Validation failed
-    return render(request, '../templates/change.html', {"title": title, "form": form})
+    return render(request, 'change.html', {"title": title, "form": form})
 
 
 #                   3) Edit admin
@@ -57,11 +57,11 @@ def admin_edit(request, nid):
     #   Get Admin Info by nid
     row_obj = Admin.objects.filter(id=nid).first()  # Object / None
     if not row_obj:
-        return render(request, '../templates/error.html')
+        return render(request, 'error.html')
 
     if request.method == 'GET':
         form = AdminEditModelForm(instance=row_obj)  # Add Admin object to Form
-        return render(request, "../templates/change.html", {"title": title, "form": form})
+        return render(request, "change.html", {"title": title, "form": form})
 
     #   Pass the information filled by the current Admin to the Form, and the current Admin
     form = AdminEditModelForm(data=request.POST, instance=row_obj)
@@ -69,7 +69,7 @@ def admin_edit(request, nid):
     if form.is_valid():
         form.save()
         return redirect('api:admin_list')
-    return render(request, "../templates/change.html", {"title": title, "form": form})
+    return render(request, "change.html", {"title": title, "form": form})
 
 
 #                   4) Delete admin
@@ -82,15 +82,15 @@ def admin_delete(request, nid):
 def admin_reset(request, nid):
     row_obj = Admin.objects.filter(id=nid).first()  # Object/None
     if not row_obj:
-        return render(request, '../templates/error.html')
+        return render(request, 'error.html')
 
     title = f"Reset Password - {row_obj.last_name} {row_obj.first_name}"
     if request.method == 'GET':
         form = AdminResetModelForm()
-        return render(request, '../templates/change.html', {"title": title, 'form': form})
+        return render(request, 'change.html', {"title": title, 'form': form})
 
     form = AdminResetModelForm(data=request.POST, instance=row_obj)
     if form.is_valid():
         form.save()
         return redirect('api:admin_list')
-    return render(request, '../templates/change.html', {"title": title, 'form': form})
+    return render(request, 'change.html', {"title": title, 'form': form})

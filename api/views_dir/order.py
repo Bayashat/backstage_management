@@ -22,7 +22,7 @@ def order_list(request):
         "page_str": page_obj.html()  # Generate page html
     }
     
-    return render(request, '../templates/order_list.html', context)
+    return render(request, 'order_list.html', context)
 
 
 @csrf_exempt

@@ -13,7 +13,7 @@ from api.utils.forms import LoginForm
 def login(request):
     if request.method == 'GET':
         form = LoginForm()
-        return render(request, '../templates/account_login.html', {"form": form})
+        return render(request, 'account_login.html', {"form": form})
 
     form = LoginForm(data=request.POST)
     if form.is_valid():
@@ -27,13 +27,13 @@ def login(request):
         image_code = request.session.get('image_code', '')  # May be empty due to 60 second timeout
         if image_code.upper() != user_input_code.upper():  # incorrect verification code
             form.add_error('code', 'verification code error')
-            return render(request, '../templates/account_login.html', {"form": form})
+            return render(request, 'account_login.html', {"form": form})
 
         #  Verify whether the username and password are correct, and get the user object / None
         admin_obj = Admin.objects.filter(**form.cleaned_data).first()  # .filter(username='xxx',password='xxx').first()
         if not admin_obj:
             form.add_error('password', "Username or Password incorrect")
-            return render(request, '../templates/account_login.html', {"form": form})
+            return render(request, 'account_login.html', {"form": form})
 
         #   Username and Password Correct
         #   The website generates a random string, write it into the cookie of the user's browser; then write it into the session
@@ -43,7 +43,7 @@ def login(request):
 
         return redirect('api:admin_list')
 
-    return render(request, '../templates/account_login.html', {"form": form})
+    return render(request, 'account_login.html', {"form": form})
 
 
 def logout(request):

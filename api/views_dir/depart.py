@@ -19,7 +19,7 @@ def depart_list(request):
         "page_str": page_obj.html()  # generated page htmls
     }
 
-    return render(request, '../templates/depart_list.html', context)
+    return render(request, 'depart_list.html', context)
 
 
 #               2) Add New Department
@@ -29,7 +29,7 @@ def depart_add(request):
 
     if request.method == 'GET':
         form = DepartModelForm()    # Instantiate the Form object
-        return render(request, '../templates/change.html', {'form': form, 'title': title})
+        return render(request, 'change.html', {'form': form, 'title': title})
 
     # Get POST data
     form = DepartModelForm(data=request.POST)   # Validation process
@@ -39,7 +39,7 @@ def depart_add(request):
         return redirect('api:depart_list')
     # Validation Failed(Display error messages on the page)
     # print(form.errors)
-    return render(request, '../templates/change.html', {'form': form, 'title': title})  # The form after verification failure already has user data
+    return render(request, 'change.html', {'form': form, 'title': title})  # The form after verification failure already has user data
 
 
 #               3) Edit Department Info
@@ -50,11 +50,11 @@ def depart_edit(request, nid):
     #   Get Department Object by nid
     row_object = Department.objects.filter(id=nid).first()  # Object / None
     if not row_object:
-        return render(request, '../templates/error.html')
+        return render(request, 'error.html')
 
     if request.method == 'GET':
         form = DepartModelForm(instance=row_object)  # Add Department Object to Form
-        return render(request, '../templates/change.html', {"form": form, 'title': title})
+        return render(request, 'change.html', {"form": form, 'title': title})
 
     #   Pass the information filled by the current user to the Form, and the current user
     form = DepartModelForm(data=request.POST, instance=row_object)
@@ -64,7 +64,7 @@ def depart_edit(request, nid):
         return redirect('api:depart_list')
 
     #   Validation failed (display error message on page)
-    return render(request, '../templates/change.html', {'form': form, 'title': title})
+    return render(request, 'change.html', {'form': form, 'title': title})
 
 
 #               4) Delete Department (with ?nid=id)

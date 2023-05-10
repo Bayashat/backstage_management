@@ -27,7 +27,7 @@ def staff_list(request):
         "search_data": search_data,
     }
 
-    return render(request, '../templates/staff_list.html', context)
+    return render(request, 'staff_list.html', context)
 
 
 #                   2) Add New Staff
@@ -36,7 +36,7 @@ def staff_add(request):
 
     if request.method == 'GET':
         form = StaffModelForm()    # Instantiate the Form object
-        return render(request, '../templates/change.html', {"form": form, 'title': title})
+        return render(request, 'change.html', {"form": form, 'title': title})
 
     # Get POST data
     form = StaffModelForm(data=request.POST)    # Validation process
@@ -48,7 +48,7 @@ def staff_add(request):
     # Validation failed (display error message on page)
     # print(form.errors)  # Error msg
     # The form after verification failure already has user data
-    return render(request, '../templates/change.html', {"form": form, 'title': title})
+    return render(request, 'change.html', {"form": form, 'title': title})
 
 
 #                   3) Edit Staff Info
@@ -58,11 +58,11 @@ def staff_edit(request, nid):
     # Get Staff info by id
     row_object = EmployeeInfo.objects.filter(id=nid).first()  # Object/None
     if not row_object:
-        return render(request, '../templates/error.html')
+        return render(request, 'error.html')
 
     if request.method == 'GET':
         form = StaffModelForm(instance=row_object)  # Add Staff info to Form
-        return render(request, '../templates/change.html', {"form": form, 'title': title})
+        return render(request, 'change.html', {"form": form, 'title': title})
 
     # Pass the information filled by the current Staff to the Form, and the current Staff
     form = StaffModelForm(data=request.POST, instance=row_object)
@@ -72,7 +72,7 @@ def staff_edit(request, nid):
         return redirect('api:staff_list')
 
     # Validation failed (display error message on page)
-    return render(request, '../templates/change.html', {'form': form, 'title': title})
+    return render(request, 'change.html', {'form': form, 'title': title})
 
 
 #                   4) Delete Staff Info (with arg)

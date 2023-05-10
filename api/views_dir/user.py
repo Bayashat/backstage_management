@@ -27,7 +27,7 @@ def user_list(request):
         "search_data": search_data,
     }
 
-    return render(request, '../templates/user_list.html', context)
+    return render(request, 'user_list.html', context)
 
 
 #                   2) Add New User
@@ -36,7 +36,7 @@ def user_add(request):
 
     if request.method == 'GET':
         form = UserModelForm()    # Instantiate the Form object
-        return render(request, '../templates/change.html', {"form": form, 'title': title})
+        return render(request, 'change.html', {"form": form, 'title': title})
 
     # Get POST data
     form = UserModelForm(data=request.POST)    # Validation process
@@ -48,7 +48,7 @@ def user_add(request):
     # Validation failed (display error message on page)
     # print(form.errors)  # Error msg
     # The form after verification failure already has user data
-    return render(request, '../templates/change.html', {"form": form, 'title': title})
+    return render(request, 'change.html', {"form": form, 'title': title})
 
 
 #                   3) Edit Staff Info
@@ -58,11 +58,11 @@ def user_edit(request, nid):
     # Get User info by id
     row_object = User.objects.filter(id=nid).first()  # Object/None
     if not row_object:
-        return render(request, '../templates/error.html')
+        return render(request, 'error.html')
 
     if request.method == 'GET':
         form = UserModelForm(instance=row_object)  # Add User info to Form
-        return render(request, '../templates/change.html', {"form": form, 'title': title})
+        return render(request, 'change.html', {"form": form, 'title': title})
 
     # Pass the information filled by the current user to the Form, and the current user
     form = UserModelForm(data=request.POST, instance=row_object)
@@ -72,7 +72,7 @@ def user_edit(request, nid):
         return redirect('api:user_list')
 
     # Validation failed (display error message on page)
-    return render(request, '../templates/change.html', {'form': form, 'title': title})
+    return render(request, 'change.html', {'form': form, 'title': title})
 
 
 #                   4) Delete User Info (with arg)
