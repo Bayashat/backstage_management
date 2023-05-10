@@ -49,6 +49,7 @@ class User(models.Model):
     gender = models.SmallIntegerField(verbose_name="Gender", choices=gender_choices)
     contact_number = models.IntegerField(verbose_name="Contact Number")
     address = models.CharField(verbose_name="Address", max_length=128, null=True, blank=True)
+    create_time = models.DateField(verbose_name="Create time", auto_now_add=True)
 
     def __str__(self) -> str:
         return f"{self.last_name} {self.first_name}"
