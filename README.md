@@ -1,6 +1,7 @@
-# Backstage Management
+# Backstage Management System
 
 > Backstage management system based on Django MTV & Ajax
+> Used Technologies: Django, Ajax, Bootstrap, jQuery
 
 ## How to use
 
