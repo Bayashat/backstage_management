@@ -18,7 +18,7 @@ urlpatterns = [
     path('staff/<int:nid>/delete/', staff.staff_delete, name='staff_delete'),  # Delete Staff info
 
     #       3) Administrator's management
-    path('admin/list/', admin.admin_list, name='admin_list'),  # Admin List
+    path('', admin.admin_list, name='admin_list'),  # Admin List
     path('admin/add/', admin.admin_add, name='admin_add'),  # Add Admin
     path('admin/<int:nid>/edit/', admin.admin_edit, name='admin_edit'),    # Edit Admin Info
     path('admin/<int:nid>/delete/', admin.admin_delete, name='admin_delete'),   # Delete Admin

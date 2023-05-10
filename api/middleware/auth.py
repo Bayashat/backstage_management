@@ -11,7 +11,7 @@ class AuthMiddleware(MiddlewareMixin):
 
         #   0. Exclude pages that do not require a login to access
         # request.path_info  # Get the URL current requesting
-        if request.path_info in ['/api/login/', '/api/image/code/', ]:
+        if request.path_info in ['/login/', '/image/code/', ]:
             return  # same thing like return None
 
         #   1. Read the session info of the currently visiting user. If can read it, it means it have already logged in, and continue
