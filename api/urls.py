@@ -19,10 +19,10 @@ urlpatterns = [
 
     #       3) Administrator's management
     path('', admin.admin_list, name='admin_list'),  # Admin List
-    path('admin/add/', admin.admin_add, name='admin_add'),  # Add Admin
-    path('admin/<int:nid>/edit/', admin.admin_edit, name='admin_edit'),    # Edit Admin Info
-    path('admin/<int:nid>/delete/', admin.admin_delete, name='admin_delete'),   # Delete Admin
-    path('admin/<int:nid>/reset/', admin.admin_reset, name='admin_reset'),  # 4.4) Reset Admin Password
+    path('Admin/add/', admin.admin_add, name='admin_add'),  # Add Admin
+    path('Admin/<int:nid>/edit/', admin.admin_edit, name='admin_edit'),    # Edit Admin Info
+    path('Admin/<int:nid>/delete/', admin.admin_delete, name='admin_delete'),   # Delete Admin
+    path('Admin/<int:nid>/reset/', admin.admin_reset, name='admin_reset'),  # 4.4) Reset Admin Password
 
     #       4) Account Management
     path('login/', account.login, name='login'),
